@@ -30,31 +30,42 @@ class HelpCommand extends Command {
 	}
 
 	buildInfoEmbed(ref, message) {
-		let infoString = `Name: ${ref.id}`;
-		let restrictionString = '';
-		if (ref.description.content) {
-			infoString += `\nDescription: ${ref.description.content}`;
+		let idString = `Name: \`${ref.id}\``;
+		if (ref.category) {
+			idString += `\nCategory: \`${ref.category}\``;
 		}
 		if (ref.aliases.length) {
-			infoString += `\nAliases: ${ref.aliases.map(e => `\`${e}\``).join(', ')}`;
+			idString += `\nAliases: ${ref.aliases.map(e => `\`${e}\``).join(', ')}`;
+		}
+
+		let infoString = '';
+		if (ref.description.content) {
+			infoString += `\nDescription: ${ref.description.content}`;
 		}
 		if (ref.description.usage) {
 			infoString += `\nUsage: \`${ref.description.usage}\``;
 		}
-		if (ref.userPermissions) {
-			restrictionString += `\nPermissions (user): ${ref.userPermissions.map(e => `\`${e}\``).join(', ')}`;
-		}
-		if (ref.clientPermissions) {
-			restrictionString += `\nPermissions (bot) ${ref.clientPermissions.map(e => `\`${e}\``).join(', ')}`;
+
+		let restrictionString = '';
+		if (ref.ownerOnly) {
+			const check = this.client.isOwner(message.author);
+			restrictionString += `\n${check ? '`✅`' : '`❌`'} Owner only`;
 		}
 		if (ref.channel === 'guild') {
-			restrictionString += `\nGuildOnly: true`;
+			const check = message.channel.type === 'text';
+			restrictionString += `\n${check ? '`✅`' : '`❌`'} Command can only be used in a guild`;
 		}
-		if (ref.ownerOnly) {
-			restrictionString += `\nOwnerOnly: true`;
+		if (ref.userPermissions) {
+			const check = message.channel.type === 'text' && message.member.permissions.has(ref.userPermissions);
+			restrictionString += `\n${check ? '`✅`' : '`❌`'} User permissions: ${ref.userPermissions.map(e => `\`${e}\``).join(', ')}`;
+		}
+		if (ref.clientPermissions) {
+			const check = message.guild.me.permissions.has(ref.clientPermissions);
+			restrictionString += `\n${check ? '`✅`' : '`❌`'} Bot permissions: ${ref.clientPermissions.map(e => `\`${e}\``).join(', ')}`;
 		}
 		const embed = new DaydreamEmbed()
-			.addField('Command Information', infoString);
+			.addField('Command Information', idString)
+			.addField('About', infoString);
 		if (restrictionString) {
 			 embed.addField('Restrictions', restrictionString);
 		}
@@ -65,7 +76,7 @@ class HelpCommand extends Command {
 	}
 
 	exec(msg, { cmd, all }) {
-		if (!cmd || ((cmd && cmd.userPermissions && msg.channel.type === 'text' && !msg.member.hasPermission(cmd.userPermissions)) && !all)) {
+		if (!cmd) {
 			const allowedCategories = this.handler.categories.filter(category => {
 				const filtered = category.filter(comm => {
 					if (all) {
@@ -73,6 +84,9 @@ class HelpCommand extends Command {
 					}
 					if (msg.channel.type === 'text' && comm.userPermissions) {
 						return msg.member.hasPermission(comm.userPermissions);
+					}
+					if (comm.ownerOnly) {
+						return this.client.isOwner(msg.author);
 					}
 					return true;
 				});
