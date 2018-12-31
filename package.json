@@ -24,5 +24,8 @@
   },
   "eslintConfig": {
     "extends": "aqua/node"
+  },
+  "scripts": {
+    "start": "node src/daydream.js"
   }
 }
