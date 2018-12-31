@@ -30,7 +30,7 @@ class ServerInfoCommand extends Command {
 
 	async buildInfoEmbed(ref) {
 		const members = await ref.members.fetch();
-		const channelCounts = groupBy(ref.channels, c => c.type).map((v, k) => `${toTitleCase(k)}channels: ${v.size}`);
+		const channelCounts = groupBy(ref.channels, c => c.type).map((v, k) => `${toTitleCase(k)} channels: ${v.size}`);
 		const presenceCounts = groupBy(members, m => m.presence.status).map((s, k) => `${displayStatus(this.client, k, ref)} ${s.size}`);
 		const memberCounts = groupBy(members, m => m.user.bot).map((v, k) => `${k ? 'Bots:' : 'Humans:'} ${v.size}`);
 		const roleCount = `Roles: ${ref.roles.size}`;
