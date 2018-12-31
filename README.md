@@ -1,32 +1,16 @@
 # Daydream
  
-A Discord Akairo boilerplate bot  
-Rquired .env structure:
-```
-EMOJI_ONLINE=<:emoji:id>
-EMOJI_OFFLINE=<:emoji:id>
-EMOJI_IDLE= <:emoji:id>
-EMOJI_DND=<:emoji:id>
-EMOJI_STREAMING=<:emoji:id>
-EMOJI_CREST=<:emoji:id>
-EMOJI_FAIL=<:emoji:id>
-HUB_GUILD=id
-OWNERS=id,id,id
-TOKEN=discordToken
-DATABASE_LOGIN=postgresql://user:secret@localhost/dbname
-PREFIX=!
-DATE_FORMAT=MMM_do_yyyy
-DEFAULT_EMBED_COLOR=3553599
-RUNTIME_ICON=node_icon_url
-```
+A Discord Akairo boilerplate bot by [almostSouji](https://github.com/almostSouji)
 
-`EMOJI_ONLINE/OFFLINE/IDLE/DND/STREAMING` emojis used for info embeds  
-`EMOJI_CREST/FAIL` emojis used for DM handling on the hub server  
-`HUB_GUILD` server ID used to identify the hub guild where DM channels are created  
-`OWNERS` owner ID, if multiple separated by `,`  
-`DATABSE_LOGIN` pg connection string to handle DM channels  
-`DATE_FORMAT` date-fns format strings <https://date-fns.org/v2.0.0-alpha.23/docs/format>, spaces replaced by _ to be compatible with .env snytax  
-`RUNTIME_ICON` url used as footer icon in the version embed
+## Installation
+
+* Make sure you have [Node.js](https://nodejs.org/) >=10 and [git](https://git-scm.com/) installed
+
+1. Clone this repository using `git clone https://github.com/project-daydreams/daydream.git`
+2. Run `npm install` in the repo folder
+3. Set up PostgreSQL
+4. Create a .env file in the format of [.env.example](./.env.example)
+5. Run `npm start` to start the bot
 
 Library: [Discord.js](https://github.com/discordjs/discord.js)   
 Framework: [Akairo](https://github.com/1Computer1/discord-akairo)   
